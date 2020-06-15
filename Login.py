@@ -47,14 +47,14 @@ class LoginPage(tk.Frame):
             self.onLogin()
     
     def onLogin(self):
-            self.error_msg.set("") # clear error field
-            uid = self.username.get()
-            cred = self.password.get()
-            try:
-                LoginPage.fbClient = fbchat.Client(uid, cred, max_tries=1)
-                self.controller.show_frame("SpamPage")
-            except FBchatException:
-                self.error_msg.set("Username or password incorrect")
-                self.passtext.set("")
-                self.usertext.set("")
-                self.username.focus()
+        self.error_msg.set("") # clear error field
+        uid = self.username.get()
+        cred = self.password.get()
+        try:
+            LoginPage.fbClient = fbchat.Client(uid, cred, max_tries=1)
+            self.controller.show_frame("SpamPage")
+        except FBchatException:
+            self.error_msg.set("Username or password incorrect")
+            self.passtext.set("")
+            self.usertext.set("")
+            self.username.focus()
