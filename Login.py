@@ -5,7 +5,7 @@ from fbchat._exception import FBchatException
 
 class LoginPage(tk.Frame):
 
-    fbClient = ...
+    fbClient = None
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)

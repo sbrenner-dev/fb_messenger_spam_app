@@ -5,6 +5,9 @@ from tkinter import StringVar
 
 class SpamPage(tk.Frame):
     def __init__(self, parent, controller):
+
+        self.cache_list = []
+
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
@@ -71,30 +74,45 @@ class SpamPage(tk.Frame):
         else:
             try:
                 uid = LoginPage.fbClient.searchForUsers(self.friend.get())[0].uid
-                for i in range(int(self.spam_times.get())):
+                for _ in range(int(self.spam_times.get())):
                     LoginPage.fbClient.sendMessage(self.msg_box.get(), thread_id=uid)
                 self.sent_txt.set("Sent!")
             except:
                 self.error_msg.set("Some field(s) entered incorrectly")
                 self.clear()
 
-    # displays an error
-    def error(self):
-        self.error_msg.set("Some field(s) entered incorrectly")
-        self.clear()
-
     # function for when user changes friend field
     # takes some default args, cannot function without it
+    # TODO - need to cache fbClient search to local list to make search faster
+    #   will autorefill if the cached version runs out of autocompletions
     def onChange(self, event):
         if len(event.keysym) == 1 or event.keysym == 'space':
             name = self.friend.get() # value
             pos = len(name) # position
-            friends = LoginPage.fbClient.searchForUsers(name) # hits
-            if friends:
+            if not len(self.cache_list) or self.friendtxt.get() == "":
+                friends = LoginPage.fbClient.searchForUsers(name) # hits
+                self.cache_list = friends
+                [print(f.name) for f in self.cache_list]
+            
+            if len(self.cache_list):
+
+                print(self.cache_list[0].name)
+                print(self.friendtxt.get())
+
+                while len(self.cache_list) and not (self.cache_list[0].name.startswith(self.friendtxt.get())):
+                    del self.cache_list[0]
+                print(len(self.cache_list))
+                if not len(self.cache_list):
+                    friends = LoginPage.fbClient.searchForUsers(name) # hits
+                    self.cache_list = friends
+
                 self.friend.delete(0, tk.END)
-                self.friend.insert(0, friends[0].name)
+                self.friend.insert(0, self.cache_list[0].name)
                 self.friend.select_range(pos, tk.END) # highlight
                 self.friend.icursor(pos)
+
+            print("\n" + self.friendtxt.get())
+            print(self.cache_list[0].name)
     
     # bind final action to key-entry on password
     def enterHit(self, event):
