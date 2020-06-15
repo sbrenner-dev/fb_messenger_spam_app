@@ -83,36 +83,26 @@ class SpamPage(tk.Frame):
 
     # function for when user changes friend field
     # takes some default args, cannot function without it
-    # TODO - need to cache fbClient search to local list to make search faster
-    #   will autorefill if the cached version runs out of autocompletions
+    # caches search to local list, uses in place of continual search until relevant results are out
     def onChange(self, event):
         if len(event.keysym) == 1 or event.keysym == 'space':
             name = self.friend.get() # value
             pos = len(name) # position
             if not len(self.cache_list) or self.friendtxt.get() == "":
-                friends = LoginPage.fbClient.searchForUsers(name) # hits
-                self.cache_list = friends
-                [print(f.name) for f in self.cache_list]
+                # either cache list is empty or there is no entry in friend field
+                self.cache_list = LoginPage.fbClient.searchForUsers(name)
             
             if len(self.cache_list):
 
-                print(self.cache_list[0].name)
-                print(self.friendtxt.get())
-
                 while len(self.cache_list) and not (self.cache_list[0].name.startswith(self.friendtxt.get())):
                     del self.cache_list[0]
-                print(len(self.cache_list))
-                if not len(self.cache_list):
-                    friends = LoginPage.fbClient.searchForUsers(name) # hits
-                    self.cache_list = friends
+                if not len(self.cache_list): # list is empty
+                    self.cache_list = LoginPage.fbClient.searchForUsers(name)
 
                 self.friend.delete(0, tk.END)
                 self.friend.insert(0, self.cache_list[0].name)
                 self.friend.select_range(pos, tk.END) # highlight
                 self.friend.icursor(pos)
-
-            print("\n" + self.friendtxt.get())
-            print(self.cache_list[0].name)
     
     # bind final action to key-entry on password
     def enterHit(self, event):
