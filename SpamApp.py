@@ -6,9 +6,9 @@ from Spam import SpamPage
 class SpamApp(tk.Tk):
     def __init__(self, *args, **kwargs):
         
-        tk.Tk.__init__(self, *args, **kwargs)
+        tk.Tk.__init__(self, *args, **kwargs) # initialize tk 
 
-        self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
+        self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic") # init font
 
         # general setup
         container = tk.Frame(self)
@@ -30,10 +30,12 @@ class SpamApp(tk.Tk):
         self.title("Spam your friends!")
     
     def show_frame(self, page_name):
+        """ Shows a frame with the given name """
         frame = self.frames[page_name]
         frame.tkraise()
 
     def center(self, width, height):
+        """ Centers this app with resepct to the screen"""
         x = (self.winfo_screenwidth() // 2) - (width // 2)
         y = (self.winfo_screenheight() // 2) - (height // 2)
         self.geometry('{}x{}+{}+{}'.format(width, height, x, y))

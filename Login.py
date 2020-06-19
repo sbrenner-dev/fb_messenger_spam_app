@@ -5,7 +5,7 @@ from fbchat._exception import FBchatException
 
 class LoginPage(tk.Frame):
 
-    fbClient = None
+    fbClient = None # fbchat instance, initialized to None
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -16,7 +16,7 @@ class LoginPage(tk.Frame):
         
         # Error space label - class variable to set text if needed
         self.error_msg=StringVar()
-        self.error = tk.Label(self, textvariable=self.error_msg, fg="red")
+        self.error = tk.Label(self, textvariable=self.error_msg, fg="red") # red error message
         self.error.pack()
 
         # Text fields - class variables to use in another method
@@ -43,10 +43,20 @@ class LoginPage(tk.Frame):
 
     # bind final action to key-entry on password
     def enterHit(self, event):
+        """ Handles a key hit on a field
+        
+            Specifically, handles enter/return hit on last field in this frame"""
         if event.keysym == 'Return':
             self.onLogin()
     
+    # logs user in with entered credentials
+    # TODO log user in with previous session cookies
     def onLogin(self):
+        """ Handles the login for this frame when the login button is pressed.
+            Gets the username and password from the frame entry fields,
+                passes them to the fbchat API for handling and secure sign-in.
+            Transfers frame to SpamApp page upon success.
+            Displays error message on error."""
         self.error_msg.set("") # clear error field
         uid = self.username.get()
         cred = self.password.get()

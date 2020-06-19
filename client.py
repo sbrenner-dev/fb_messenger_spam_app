@@ -1,4 +1,4 @@
-import SpamApp
+import SpamApp # main app
 
-app = SpamApp.SpamApp()
-app.mainloop()
+app = SpamApp.SpamApp() # initialize
+app.mainloop() # run
